@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách Pokémon</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .pokemon-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .pokemon-card {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      width: 150px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .pokemon-card img {
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>20 Pokémon đầu tiên</h1>
+  <div class="pokemon-list" id="list"></div>
+
+  <script>
+    const list = document.getElementById("list");
+
+    async function fetchPokemonList() {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
+      const data = await res.json();
+
+      data.results.forEach(async (pokemon) => {
+        const res2 = await fetch(pokemon.url);
+        const detail = await res2.json();
+
+        const card = document.createElement("div");
+        card.className = "pokemon-card";
+        card.innerHTML = `
+          <h4>${detail.name.toUpperCase()}</h4>
+          <img src="${detail.sprites.front_default}" alt="${detail.name}">
+          <p>Height: ${detail.height}</p>
+          <p>Weight: ${detail.weight}</p>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    fetchPokemonList();
+  </script>
+</body>
+</html>
